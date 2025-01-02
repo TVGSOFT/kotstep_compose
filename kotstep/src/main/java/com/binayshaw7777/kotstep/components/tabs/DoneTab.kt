@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 
 /**
  * Represents the done tab in a tab stepper.
@@ -29,41 +28,41 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 internal fun DoneTab(
-    circleColor: Color = Color.Green,
-    showTick: Boolean = false,
-    checkMarkColor: Color = Color.White,
-    stepShape: Shape = CircleShape
+  circleColor: Color = Color.Green,
+  showTick: Boolean = false,
+  checkMarkColor: Color = Color.White,
+  stepShape: Shape = CircleShape
 ) {
-    val painter = rememberVectorPainter(Icons.Default.Done)
+  val painter = rememberVectorPainter(Icons.Default.Done)
 
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .clip(stepShape)
-    ) {
-        drawOutline(
-            outline = stepShape.createOutline(
-                size,
-                layoutDirection = LayoutDirection.Ltr,
-                density = this
-            ),
-            color = circleColor,
-            style = Fill
-        )
+  Canvas(
+    modifier = Modifier
+      .fillMaxSize()
+      .clip(stepShape)
+  ) {
+    drawOutline(
+      outline = stepShape.createOutline(
+        size,
+        layoutDirection = LayoutDirection.Ltr,
+        density = this
+      ),
+      color = circleColor,
+      style = Fill
+    )
 
-        if (showTick) {
-            val iconSize = (size.minDimension * 0.65f)
-            val iconOffset = (size.minDimension - iconSize) / 2f
+    if (showTick) {
+      val iconSize = (size.minDimension * 0.65f)
+      val iconOffset = (size.minDimension - iconSize) / 2f
 
-            translate(left = iconOffset, top = iconOffset) {
-                with(painter) {
-                    draw(
-                        size = Size(iconSize, iconSize),
-                        alpha = 1f,
-                        colorFilter = ColorFilter.tint(checkMarkColor)
-                    )
-                }
-            }
+      translate(left = iconOffset, top = iconOffset) {
+        with(painter) {
+          draw(
+            size = Size(iconSize, iconSize),
+            alpha = 1f,
+            colorFilter = ColorFilter.tint(checkMarkColor)
+          )
         }
+      }
     }
+  }
 }

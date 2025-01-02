@@ -21,13 +21,13 @@ import androidx.compose.ui.composed
  * @see Modifier.clickable
  */
 fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
-    this.clickable(
-        indication = null,
-        interactionSource = remember { MutableInteractionSource() }) {
-        onClick()
-    }
+  this.clickable(
+    indication = null,
+    interactionSource = remember { MutableInteractionSource() }) {
+    onClick()
+  }
 }
 
 fun Any.log(tag: String = "My Logger") {
-    Log.d(tag, this.toString())
+  Log.d(tag, this.toString())
 }

@@ -11,7 +11,7 @@ package com.binayshaw7777.kotstep.model
  *
  */
 enum class LineType {
-    SOLID,
-    DOTTED,
-    DASHED
+  SOLID,
+  DOTTED,
+  DASHED
 }

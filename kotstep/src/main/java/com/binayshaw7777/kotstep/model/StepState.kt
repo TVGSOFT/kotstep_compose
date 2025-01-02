@@ -12,7 +12,7 @@ package com.binayshaw7777.kotstep.model
  *
  */
 enum class StepState {
-    TODO,
-    CURRENT,
-    DONE
+  TODO,
+  CURRENT,
+  DONE
 }

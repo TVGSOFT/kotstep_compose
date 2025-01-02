@@ -14,33 +14,35 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun KotSlider(
-    modifier: Modifier = Modifier,
-    sliderHeader: String,
-    currentValue: Int,
-    range: ClosedFloatingPointRange<Float> = 1f..10f,
-    steps: Int = 10,
-    onValueChange: (Int) -> Unit
+  modifier: Modifier = Modifier,
+  sliderHeader: String,
+  currentValue: Int,
+  range: ClosedFloatingPointRange<Float> = 1f..10f,
+  steps: Int = 10,
+  onValueChange: (Int) -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .padding(20.dp)
-    ) {
-        Text(
-            text = "$sliderHeader: $currentValue",
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-        Slider(
-            value = currentValue.toFloat(),
-            onValueChange = { newValue ->
-                 onValueChange(newValue.toInt())
-            },
-            valueRange = 1f..10f, // Set the range of Total Steps
-            steps = 10, // Divide the range into 10 steps
-            modifier = Modifier.fillMaxWidth().then(modifier)
-        )
-    }
+  Column(
+    horizontalAlignment = Alignment.Start,
+    verticalArrangement = Arrangement.spacedBy(8.dp),
+    modifier = Modifier
+      .fillMaxWidth()
+      .navigationBarsPadding()
+      .padding(20.dp)
+  ) {
+    Text(
+      text = "$sliderHeader: $currentValue",
+      modifier = Modifier.padding(vertical = 8.dp)
+    )
+    Slider(
+      value = currentValue.toFloat(),
+      onValueChange = { newValue ->
+        onValueChange(newValue.toInt())
+      },
+      valueRange = 1f..10f, // Set the range of Total Steps
+      steps = 10, // Divide the range into 10 steps
+      modifier = Modifier
+        .fillMaxWidth()
+        .then(modifier)
+    )
+  }
 }

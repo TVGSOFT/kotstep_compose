@@ -20,15 +20,19 @@ import androidx.compose.ui.unit.LayoutDirection
  */
 @Composable
 internal fun TodoTab(
-    strokeColor: Color = Color.Gray,
-    strokeThickness: Float = 4f,
-    stepShape: Shape = CircleShape
+  strokeColor: Color = Color.Gray,
+  strokeThickness: Float = 4f,
+  stepShape: Shape = CircleShape
 ) {
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        drawOutline(
-            outline = stepShape.createOutline(size, layoutDirection = LayoutDirection.Ltr, density = this),
-            color = strokeColor,
-            style = Stroke(width = strokeThickness)
-        )
-    }
+  Canvas(modifier = Modifier.fillMaxSize()) {
+    drawOutline(
+      outline = stepShape.createOutline(
+        size,
+        layoutDirection = LayoutDirection.Ltr,
+        density = this
+      ),
+      color = strokeColor,
+      style = Stroke(width = strokeThickness)
+    )
+  }
 }

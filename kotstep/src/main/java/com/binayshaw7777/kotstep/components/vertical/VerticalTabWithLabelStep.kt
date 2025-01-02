@@ -41,162 +41,162 @@ import com.binayshaw7777.kotstep.util.noRippleClickable
  */
 @Composable
 internal fun VerticalTabWithLabelStep(
-    modifier: Modifier = Modifier,
-    stepStyle: StepStyle,
-    stepState: StepState,
-    trailingLabel: (@Composable () -> Unit)?,
-    isLastStep: Boolean,
-    lineProgress: Float,
-    onClick: () -> Unit
+  modifier: Modifier = Modifier,
+  stepStyle: StepStyle,
+  stepState: StepState,
+  trailingLabel: (@Composable () -> Unit)?,
+  isLastStep: Boolean,
+  lineProgress: Float,
+  onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    val displayMetrics = context.resources.displayMetrics
-    val density = displayMetrics.density
+  val context = LocalContext.current
+  val displayMetrics = context.resources.displayMetrics
+  val density = displayMetrics.density
 
-    val transition = updateTransition(targetState = stepState, label = "")
+  val transition = updateTransition(targetState = stepState, label = "")
 
-    val containerColor: Color by transition.animateColor(label = "itemColor") {
-        when (it) {
-            StepState.TODO -> stepStyle.colors.todoContainerColor
-            StepState.CURRENT -> stepStyle.colors.currentContainerColor
-            StepState.DONE -> stepStyle.colors.doneContainerColor
+  val containerColor: Color by transition.animateColor(label = "itemColor") {
+    when (it) {
+      StepState.TODO -> stepStyle.colors.todoContainerColor
+      StepState.CURRENT -> stepStyle.colors.currentContainerColor
+      StepState.DONE -> stepStyle.colors.doneContainerColor
+    }
+  }
+
+  val lineColor: Color by transition.animateColor(label = "lineColor") {
+    when (it) {
+      StepState.TODO -> stepStyle.colors.todoLineColor
+      StepState.CURRENT -> stepStyle.colors.currentLineColor
+      StepState.DONE -> stepStyle.colors.doneLineColor
+    }
+  }
+
+  val lineTrackStyle: LineType = when (stepState) {
+    StepState.TODO -> stepStyle.lineStyle.todoLineTrackType
+    StepState.CURRENT -> stepStyle.lineStyle.currentLineTrackType
+    StepState.DONE -> stepStyle.lineStyle.doneLineTrackType
+  }
+
+  val lineProgressStyle: LineType = when (stepState) {
+    StepState.TODO -> stepStyle.lineStyle.todoLineProgressType
+    StepState.CURRENT -> stepStyle.lineStyle.currentLineProgressType
+    StepState.DONE -> stepStyle.lineStyle.doneLineProgressType
+  }
+
+  val trackStrokeCap: StrokeCap = when (stepState) {
+    StepState.TODO -> StrokeCap.Round
+    StepState.CURRENT -> StrokeCap.Square
+    StepState.DONE -> stepStyle.lineStyle.trackStrokeCap
+  }
+
+  val progressStrokeCap: StrokeCap = when (stepState) {
+    StepState.TODO -> StrokeCap.Round
+    StepState.CURRENT -> StrokeCap.Square
+    StepState.DONE -> stepStyle.lineStyle.progressStrokeCap
+  }
+
+  var labelHeight by remember { mutableStateOf(0.dp) }
+  var isLabelMeasured by remember { mutableStateOf(false) }
+
+  ConstraintLayout(
+    modifier = Modifier
+      .noRippleClickable { onClick() }
+      .fillMaxWidth()
+      .then(modifier)
+  ) {
+    val (iconBox, divider, labelBox) = createRefs()
+
+    // Icon Box
+    Box(
+      contentAlignment = Alignment.Center,
+      modifier = Modifier
+        .size(stepStyle.stepSize)
+        .constrainAs(iconBox) {
+          top.linkTo(parent.top)
+          start.linkTo(parent.start)
         }
-    }
-
-    val lineColor: Color by transition.animateColor(label = "lineColor") {
-        when (it) {
-            StepState.TODO -> stepStyle.colors.todoLineColor
-            StepState.CURRENT -> stepStyle.colors.currentLineColor
-            StepState.DONE -> stepStyle.colors.doneLineColor
-        }
-    }
-
-    val lineTrackStyle: LineType = when (stepState) {
-        StepState.TODO -> stepStyle.lineStyle.todoLineTrackType
-        StepState.CURRENT -> stepStyle.lineStyle.currentLineTrackType
-        StepState.DONE -> stepStyle.lineStyle.doneLineTrackType
-    }
-
-    val lineProgressStyle: LineType = when (stepState) {
-        StepState.TODO -> stepStyle.lineStyle.todoLineProgressType
-        StepState.CURRENT -> stepStyle.lineStyle.currentLineProgressType
-        StepState.DONE -> stepStyle.lineStyle.doneLineProgressType
-    }
-
-    val trackStrokeCap: StrokeCap = when (stepState) {
-        StepState.TODO -> StrokeCap.Round
-        StepState.CURRENT -> StrokeCap.Square
-        StepState.DONE -> stepStyle.lineStyle.trackStrokeCap
-    }
-
-    val progressStrokeCap: StrokeCap = when (stepState) {
-        StepState.TODO -> StrokeCap.Round
-        StepState.CURRENT -> StrokeCap.Square
-        StepState.DONE -> stepStyle.lineStyle.progressStrokeCap
-    }
-
-    var labelHeight by remember { mutableStateOf(0.dp) }
-    var isLabelMeasured by remember { mutableStateOf(false) }
-
-    ConstraintLayout(
-        modifier = Modifier
-            .noRippleClickable { onClick() }
-            .fillMaxWidth()
-            .then(modifier)
     ) {
-        val (iconBox, divider, labelBox) = createRefs()
-
-        // Icon Box
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(stepStyle.stepSize)
-                .constrainAs(iconBox) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                }
-        ) {
-            when (stepState) {
-                StepState.TODO -> {
-                    TodoTab(
-                        strokeColor = containerColor,
-                        strokeThickness = stepStyle.stepStroke,
-                        stepShape = stepStyle.stepShape
-                    )
-                }
-
-                StepState.CURRENT -> {
-                    CurrentTab(
-                        circleColor = containerColor,
-                        strokeThickness = stepStyle.stepStroke,
-                        stepShape = stepStyle.stepShape
-                    )
-                }
-
-                StepState.DONE -> {
-                    DoneTab(
-                        circleColor = containerColor,
-                        showTick = stepStyle.showCheckMarkOnDone,
-                        checkMarkColor = stepStyle.colors.checkMarkColor,
-                        stepShape = stepStyle.stepShape
-                    )
-                }
-            }
+      when (stepState) {
+        StepState.TODO -> {
+          TodoTab(
+            strokeColor = containerColor,
+            strokeThickness = stepStyle.stepStroke,
+            stepShape = stepStyle.stepShape
+          )
         }
 
-        // Vertical Divider (Line)
-        if (!isLastStep) {
-            val measuredLabelHeight =
-                if (isLabelMeasured) maxOf(
-                    labelHeight,
-                    stepStyle.lineStyle.lineSize
-                ) else stepStyle.lineStyle.lineSize
-
-            KotStepVerticalDivider(
-                modifier = Modifier
-                    .padding(
-                        top = stepStyle.lineStyle.linePaddingTop,
-                        bottom = stepStyle.lineStyle.linePaddingBottom
-                    )
-                    .constrainAs(divider) {
-                        top.linkTo(iconBox.bottom, margin = stepStyle.lineStyle.linePaddingTop)
-                        start.linkTo(iconBox.start)
-                        end.linkTo(iconBox.end)
-                        bottom.linkTo(parent.bottom, margin = stepStyle.lineStyle.linePaddingBottom)
-                    },
-                height = measuredLabelHeight,
-                width = stepStyle.lineStyle.lineThickness,
-                lineTrackColor = stepStyle.colors.todoLineColor,
-                lineProgressColor = lineColor,
-                lineTrackStyle = lineTrackStyle,
-                lineProgressStyle = lineProgressStyle,
-                progress = lineProgress,
-                trackStrokeCap = trackStrokeCap,
-                progressStrokeCap = progressStrokeCap
-            )
+        StepState.CURRENT -> {
+          CurrentTab(
+            circleColor = containerColor,
+            strokeThickness = stepStyle.stepStroke,
+            stepShape = stepStyle.stepShape
+          )
         }
 
-        // Trailing Label
-        trailingLabel?.let { labelContent ->
-            Box(
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .onGloballyPositioned { coordinates ->
-                        if (!isLabelMeasured) {
-                            labelHeight = (coordinates.size.height.toFloat() / density).dp
-                            isLabelMeasured = true
-                        }
-                    }
-                    .constrainAs(labelBox) {
-                        top.linkTo(iconBox.top)
-                        start.linkTo(iconBox.end)
-                        end.linkTo(parent.end)
-                        width = androidx.constraintlayout.compose.Dimension.fillToConstraints
-                    },
-                contentAlignment = Alignment.TopStart
-            ) {
-                labelContent()
-            }
+        StepState.DONE -> {
+          DoneTab(
+            circleColor = containerColor,
+            showTick = stepStyle.showCheckMarkOnDone,
+            checkMarkColor = stepStyle.colors.checkMarkColor,
+            stepShape = stepStyle.stepShape
+          )
         }
+      }
     }
+
+    // Vertical Divider (Line)
+    if (!isLastStep) {
+      val measuredLabelHeight =
+        if (isLabelMeasured) maxOf(
+          labelHeight,
+          stepStyle.lineStyle.lineSize
+        ) else stepStyle.lineStyle.lineSize
+
+      KotStepVerticalDivider(
+        modifier = Modifier
+          .padding(
+            top = stepStyle.lineStyle.linePaddingTop,
+            bottom = stepStyle.lineStyle.linePaddingBottom
+          )
+          .constrainAs(divider) {
+            top.linkTo(iconBox.bottom, margin = stepStyle.lineStyle.linePaddingTop)
+            start.linkTo(iconBox.start)
+            end.linkTo(iconBox.end)
+            bottom.linkTo(parent.bottom, margin = stepStyle.lineStyle.linePaddingBottom)
+          },
+        height = measuredLabelHeight,
+        width = stepStyle.lineStyle.lineThickness,
+        lineTrackColor = stepStyle.colors.todoLineColor,
+        lineProgressColor = lineColor,
+        lineTrackStyle = lineTrackStyle,
+        lineProgressStyle = lineProgressStyle,
+        progress = lineProgress,
+        trackStrokeCap = trackStrokeCap,
+        progressStrokeCap = progressStrokeCap
+      )
+    }
+
+    // Trailing Label
+    trailingLabel?.let { labelContent ->
+      Box(
+        modifier = Modifier
+          .padding(start = 16.dp)
+          .onGloballyPositioned { coordinates ->
+            if (!isLabelMeasured) {
+              labelHeight = (coordinates.size.height.toFloat() / density).dp
+              isLabelMeasured = true
+            }
+          }
+          .constrainAs(labelBox) {
+            top.linkTo(iconBox.top)
+            start.linkTo(iconBox.end)
+            end.linkTo(parent.end)
+            width = androidx.constraintlayout.compose.Dimension.fillToConstraints
+          },
+        contentAlignment = Alignment.TopStart
+      ) {
+        labelContent()
+      }
+    }
+  }
 }

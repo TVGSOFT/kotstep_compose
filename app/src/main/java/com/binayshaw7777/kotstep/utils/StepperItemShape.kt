@@ -7,30 +7,30 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 
 enum class StepperItemShape {
-    RECTANGLE_SHAPE,
-    CIRCLE_SHAPE,
-    ROUNDED_CORNER_SHAPE,
-    CUT_CORNER_SHAPE;
+  RECTANGLE_SHAPE,
+  CIRCLE_SHAPE,
+  ROUNDED_CORNER_SHAPE,
+  CUT_CORNER_SHAPE;
 
-    companion object {
-        fun getShapeFromEnum(shape: StepperItemShape): Shape {
-            return when (shape) {
-                RECTANGLE_SHAPE -> {
-                    RectangleShape
-                }
-
-                CIRCLE_SHAPE -> {
-                    CircleShape
-                }
-
-                ROUNDED_CORNER_SHAPE -> {
-                    RoundedCornerShape(20)
-                }
-
-                CUT_CORNER_SHAPE -> {
-                    CutCornerShape(20)
-                }
-            }
+  companion object {
+    fun getShapeFromEnum(shape: StepperItemShape): Shape {
+      return when (shape) {
+        RECTANGLE_SHAPE -> {
+          RectangleShape
         }
+
+        CIRCLE_SHAPE -> {
+          CircleShape
+        }
+
+        ROUNDED_CORNER_SHAPE -> {
+          RoundedCornerShape(20)
+        }
+
+        CUT_CORNER_SHAPE -> {
+          CutCornerShape(20)
+        }
+      }
     }
+  }
 }

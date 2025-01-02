@@ -26,17 +26,17 @@ import androidx.compose.ui.unit.sp
  */
 @Immutable
 data class StepStyle(
-    val colors: StepDefaults = StepDefaults.defaultColors(),
-    val lineStyle: LineDefault = LineDefault.defaultLine(),
-    val stepSize: Dp = 36.dp,
-    val stepShape: Shape = CircleShape,
-    val stepStroke: Float = 2f,
-    val textSize: TextUnit = 16.sp,
-    val iconSize: Dp = 24.dp,
-    val stepPadding: Dp = 0.dp,
-    val showCheckMarkOnDone: Boolean = true,
-    val showStrokeOnCurrent: Boolean = true,
-    val ignoreCurrentState: Boolean = false
+  val colors: StepDefaults = StepDefaults.defaultColors(),
+  val lineStyle: LineDefault = LineDefault.defaultLine(),
+  val stepSize: Dp = 36.dp,
+  val stepShape: Shape = CircleShape,
+  val stepStroke: Float = 2f,
+  val textSize: TextUnit = 16.sp,
+  val iconSize: Dp = 24.dp,
+  val stepPadding: Dp = 0.dp,
+  val showCheckMarkOnDone: Boolean = true,
+  val showStrokeOnCurrent: Boolean = true,
+  val ignoreCurrentState: Boolean = false
 )
 
 
@@ -60,33 +60,33 @@ data class StepStyle(
  */
 @Immutable
 data class LineDefault(
-    val lineThickness: Dp = 6.dp,
-    val lineSize: Dp = 20.dp,
-    val linePaddingStart: Dp = 0.dp,
-    val linePaddingEnd: Dp = 0.dp,
-    val linePaddingTop: Dp = 0.dp,
-    val linePaddingBottom: Dp = 0.dp,
-    val trackStrokeCap: StrokeCap = StrokeCap.Square,
-    val progressStrokeCap: StrokeCap = StrokeCap.Square,
-    val todoLineTrackType: LineType = LineType.SOLID,
-    val currentLineTrackType: LineType = LineType.SOLID,
-    val doneLineTrackType: LineType = LineType.SOLID,
-    val todoLineProgressType: LineType = LineType.SOLID,
-    val currentLineProgressType: LineType = LineType.SOLID,
-    val doneLineProgressType: LineType = LineType.SOLID
+  val lineThickness: Dp = 6.dp,
+  val lineSize: Dp = 20.dp,
+  val linePaddingStart: Dp = 0.dp,
+  val linePaddingEnd: Dp = 0.dp,
+  val linePaddingTop: Dp = 0.dp,
+  val linePaddingBottom: Dp = 0.dp,
+  val trackStrokeCap: StrokeCap = StrokeCap.Square,
+  val progressStrokeCap: StrokeCap = StrokeCap.Square,
+  val todoLineTrackType: LineType = LineType.SOLID,
+  val currentLineTrackType: LineType = LineType.SOLID,
+  val doneLineTrackType: LineType = LineType.SOLID,
+  val todoLineProgressType: LineType = LineType.SOLID,
+  val currentLineProgressType: LineType = LineType.SOLID,
+  val doneLineProgressType: LineType = LineType.SOLID
 ) {
-    companion object {
-        fun defaultLine() = LineDefault(
-            lineThickness = 6.dp,
-            lineSize = 20.dp,
-            linePaddingStart = 0.dp,
-            linePaddingEnd = 0.dp,
-            linePaddingTop = 0.dp,
-            linePaddingBottom = 0.dp,
-            trackStrokeCap = StrokeCap.Square,
-            progressStrokeCap = StrokeCap.Square
-        )
-    }
+  companion object {
+    fun defaultLine() = LineDefault(
+      lineThickness = 6.dp,
+      lineSize = 20.dp,
+      linePaddingStart = 0.dp,
+      linePaddingEnd = 0.dp,
+      linePaddingTop = 0.dp,
+      linePaddingBottom = 0.dp,
+      trackStrokeCap = StrokeCap.Square,
+      progressStrokeCap = StrokeCap.Square
+    )
+  }
 }
 
 /**
@@ -105,34 +105,34 @@ data class LineDefault(
  */
 @Immutable
 data class StepDefaults(
-    val todoContainerColor: Color = Color.Gray,
-    val todoContentColor: Color = Color.DarkGray,
-    val todoLineColor: Color = Color.Gray,
-    val currentContainerColor: Color = Color.Blue,
-    val currentContentColor: Color = Color.White,
-    val currentLineColor: Color = Color.Blue,
-    val doneContainerColor: Color = Color.Green,
-    val doneContentColor: Color = Color.White,
-    val doneLineColor: Color = Color.Green,
-    val checkMarkColor: Color = Color.Black
+  val todoContainerColor: Color = Color.Gray,
+  val todoContentColor: Color = Color.DarkGray,
+  val todoLineColor: Color = Color.Gray,
+  val currentContainerColor: Color = Color.Blue,
+  val currentContentColor: Color = Color.White,
+  val currentLineColor: Color = Color.Blue,
+  val doneContainerColor: Color = Color.Green,
+  val doneContentColor: Color = Color.White,
+  val doneLineColor: Color = Color.Green,
+  val checkMarkColor: Color = Color.Black
 ) {
-    companion object {
-        /**
-         * Returns the default colors for the steps.
-         *
-         * @return The default [StepDefaults] instance.
-         */
-        fun defaultColors() = StepDefaults(
-            todoContainerColor = Color.Gray,
-            todoContentColor = Color.DarkGray,
-            todoLineColor = Color.Gray,
-            currentContainerColor = Color.Blue,
-            currentContentColor = Color.White,
-            currentLineColor = Color.Blue,
-            doneContainerColor = Color.Green,
-            doneContentColor = Color.White,
-            doneLineColor = Color.Green,
-            checkMarkColor = Color.Black
-        )
-    }
+  companion object {
+    /**
+     * Returns the default colors for the steps.
+     *
+     * @return The default [StepDefaults] instance.
+     */
+    fun defaultColors() = StepDefaults(
+      todoContainerColor = Color.Gray,
+      todoContentColor = Color.DarkGray,
+      todoLineColor = Color.Gray,
+      currentContainerColor = Color.Blue,
+      currentContentColor = Color.White,
+      currentLineColor = Color.Blue,
+      doneContainerColor = Color.Green,
+      doneContentColor = Color.White,
+      doneLineColor = Color.Green,
+      checkMarkColor = Color.Black
+    )
+  }
 }

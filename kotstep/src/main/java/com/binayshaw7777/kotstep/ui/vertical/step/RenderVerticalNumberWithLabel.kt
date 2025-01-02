@@ -19,53 +19,54 @@ import com.binayshaw7777.kotstep.model.StepStyle
  */
 @Composable
 internal fun RenderVerticalNumberWithLabel(
-    modifier: Modifier,
-    totalSteps: Int,
-    currentStep: Number,
-    stepStyle: StepStyle,
-    trailingLabels: List<(@Composable () -> Unit)?>,
-    onStepClick: (Int) -> Unit = {}
+  modifier: Modifier,
+  totalSteps: Int,
+  currentStep: Number,
+  stepStyle: StepStyle,
+  trailingLabels: List<(@Composable () -> Unit)?>,
+  onStepClick: (Int) -> Unit = {}
 ) {
 
-    require(trailingLabels.any { it != null }) {
-        "At least one element in the contents list should be non-null. " +
-                "If all elements are null, consider using 'NumberedStepper' instead."
-    }
+  require(trailingLabels.any { it != null }) {
+    "At least one element in the contents list should be non-null. " +
+      "If all elements are null, consider using 'NumberedStepper' instead."
+  }
 
-    require(currentStep.toFloat() in -1f..totalSteps.toFloat()) { "Current step should be between -1 and total steps but it was ${currentStep.toFloat()}" }
+  require(currentStep.toFloat() in -1f..totalSteps.toFloat()) { "Current step should be between -1 and total steps but it was ${currentStep.toFloat()}" }
 
-    Column(modifier = modifier) {
+  Column(modifier = modifier) {
 
-        trailingLabels.forEachIndexed { index, trailingLabel ->
-            val stepState = when {
-                stepStyle.ignoreCurrentState -> {
-                    if (currentStep.toFloat() >= index.toFloat()) StepState.DONE else StepState.TODO
-                }
-                else -> {
-                    when {
-                        index < currentStep.toInt() -> StepState.DONE
-                        index == currentStep.toInt() -> StepState.CURRENT
-                        else -> StepState.TODO
-                    }
-                }
-            }
-
-            val lineProgress = if (index == currentStep.toInt()) {
-                currentStep.toFloat() - currentStep.toInt()
-            } else if (index < currentStep.toInt()) {
-                1f
-            } else {
-                0f
-            }
-
-            VerticalNumberWithLabelStep(
-                stepStyle = stepStyle,
-                stepState = stepState,
-                stepNumber = index + 1,
-                trailingLabel = trailingLabel,
-                isLastStep = index == trailingLabels.size - 1,
-                lineProgress = lineProgress,
-            ) { onStepClick(index) }
+    trailingLabels.forEachIndexed { index, trailingLabel ->
+      val stepState = when {
+        stepStyle.ignoreCurrentState -> {
+          if (currentStep.toFloat() >= index.toFloat()) StepState.DONE else StepState.TODO
         }
+
+        else -> {
+          when {
+            index < currentStep.toInt() -> StepState.DONE
+            index == currentStep.toInt() -> StepState.CURRENT
+            else -> StepState.TODO
+          }
+        }
+      }
+
+      val lineProgress = if (index == currentStep.toInt()) {
+        currentStep.toFloat() - currentStep.toInt()
+      } else if (index < currentStep.toInt()) {
+        1f
+      } else {
+        0f
+      }
+
+      VerticalNumberWithLabelStep(
+        stepStyle = stepStyle,
+        stepState = stepState,
+        stepNumber = index + 1,
+        trailingLabel = trailingLabel,
+        isLastStep = index == trailingLabels.size - 1,
+        lineProgress = lineProgress,
+      ) { onStepClick(index) }
     }
+  }
 }

@@ -33,65 +33,65 @@ import com.binayshaw7777.kotstep.util.noRippleClickable
  */
 @Composable
 internal fun HorizontalDashedStep(
-    modifier: Modifier = Modifier,
-    stepStyle: StepStyle,
-    stepState: StepState,
-    totalSteps: Int,
-    size: IntSize,
-    onClick: () -> Unit
+  modifier: Modifier = Modifier,
+  stepStyle: StepStyle,
+  stepState: StepState,
+  totalSteps: Int,
+  size: IntSize,
+  onClick: () -> Unit
 ) {
 
-    val transition = updateTransition(targetState = stepState, label = "")
+  val transition = updateTransition(targetState = stepState, label = "")
 
-    val containerColor: Color by transition.animateColor(label = "itemColor") {
-        when (it) {
-            StepState.TODO -> stepStyle.colors.todoContainerColor
-            StepState.CURRENT -> stepStyle.colors.currentContainerColor
-            StepState.DONE -> stepStyle.colors.doneContainerColor
+  val containerColor: Color by transition.animateColor(label = "itemColor") {
+    when (it) {
+      StepState.TODO -> stepStyle.colors.todoContainerColor
+      StepState.CURRENT -> stepStyle.colors.currentContainerColor
+      StepState.DONE -> stepStyle.colors.doneContainerColor
+    }
+  }
+
+  val progressState: Float by transition.animateFloat(label = "progress") {
+    when (it) {
+      StepState.TODO -> 0f
+      StepState.CURRENT -> 0.5f
+      StepState.DONE -> 1f
+    }
+  }
+
+  val trackStrokeCap: StrokeCap = when (stepState) {
+    StepState.TODO -> StrokeCap.Round
+    StepState.CURRENT -> StrokeCap.Square
+    StepState.DONE -> stepStyle.lineStyle.trackStrokeCap
+  }
+
+  val progressStrokeCap: StrokeCap = when (stepState) {
+    StepState.TODO -> StrokeCap.Round
+    StepState.CURRENT -> StrokeCap.Square
+    StepState.DONE -> stepStyle.lineStyle.progressStrokeCap
+  }
+
+  LinearProgressIndicator(
+    progress = { progressState },
+    modifier = Modifier
+      .noRippleClickable { onClick() }
+      .height(stepStyle.lineStyle.lineThickness)
+      .then(
+        with(LocalDensity.current) {
+          if (totalSteps > 1) {
+            Modifier
+              .widthIn(max = size.width.toDp() / totalSteps)
+              .padding(2.dp)
+          } else {
+            Modifier
+              .fillMaxWidth()
+              .padding(2.dp)
+          }
         }
-    }
-
-    val progressState: Float by transition.animateFloat(label = "progress") {
-        when (it) {
-            StepState.TODO -> 0f
-            StepState.CURRENT -> 0.5f
-            StepState.DONE -> 1f
-        }
-    }
-
-    val trackStrokeCap: StrokeCap = when (stepState) {
-        StepState.TODO -> StrokeCap.Round
-        StepState.CURRENT -> StrokeCap.Square
-        StepState.DONE -> stepStyle.lineStyle.trackStrokeCap
-    }
-
-    val progressStrokeCap: StrokeCap = when (stepState) {
-        StepState.TODO -> StrokeCap.Round
-        StepState.CURRENT -> StrokeCap.Square
-        StepState.DONE -> stepStyle.lineStyle.progressStrokeCap
-    }
-
-    LinearProgressIndicator(
-        progress = { progressState },
-        modifier = Modifier
-            .noRippleClickable { onClick() }
-            .height(stepStyle.lineStyle.lineThickness)
-            .then(
-                with(LocalDensity.current) {
-                    if (totalSteps > 1) {
-                        Modifier
-                            .widthIn(max = size.width.toDp() / totalSteps)
-                            .padding(2.dp)
-                    } else {
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(2.dp)
-                    }
-                }
-            )
-            .then(modifier),
-        color = containerColor,
-        trackColor = containerColor,
-        strokeCap = if (progressState == 0f) trackStrokeCap else progressStrokeCap,
-    )
+      )
+      .then(modifier),
+    color = containerColor,
+    trackColor = containerColor,
+    strokeCap = if (progressState == 0f) trackStrokeCap else progressStrokeCap,
+  )
 }

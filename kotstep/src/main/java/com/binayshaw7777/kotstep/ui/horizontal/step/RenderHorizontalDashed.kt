@@ -26,46 +26,47 @@ import com.binayshaw7777.kotstep.model.StepStyle
  */
 @Composable
 internal fun RenderHorizontalDashed(
-    modifier: Modifier = Modifier,
-    totalSteps: Int,
-    currentStep: Number,
-    stepStyle: StepStyle = StepStyle(),
-    onStepClick: (Int) -> Unit = {}
+  modifier: Modifier = Modifier,
+  totalSteps: Int,
+  currentStep: Number,
+  stepStyle: StepStyle = StepStyle(),
+  onStepClick: (Int) -> Unit = {}
 ) {
 
-    require(currentStep.toFloat() in -1f..totalSteps.toFloat()) { "Current step should be between 0 and total steps but it was ${currentStep.toFloat()}" }
+  require(currentStep.toFloat() in -1f..totalSteps.toFloat()) { "Current step should be between 0 and total steps but it was ${currentStep.toFloat()}" }
 
-    var size by remember { mutableStateOf(IntSize.Zero) }
+  var size by remember { mutableStateOf(IntSize.Zero) }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onSizeChanged { size = it }
-            .then(modifier),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .onSizeChanged { size = it }
+      .then(modifier),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
 
-        for (index in 0 until totalSteps) {
-            val stepState =
-                when {
-                    stepStyle.ignoreCurrentState -> {
-                        if (currentStep.toFloat() >= index.toFloat()) StepState.DONE else StepState.TODO
-                    }
-                    else -> {
-                        when {
-                            index < currentStep.toInt() -> StepState.DONE
-                            index == currentStep.toInt() -> StepState.CURRENT
-                            else -> StepState.TODO
-                        }
-                    }
-                }
+    for (index in 0 until totalSteps) {
+      val stepState =
+        when {
+          stepStyle.ignoreCurrentState -> {
+            if (currentStep.toFloat() >= index.toFloat()) StepState.DONE else StepState.TODO
+          }
 
-            HorizontalDashedStep(
-                stepStyle = stepStyle,
-                stepState = stepState,
-                totalSteps = totalSteps,
-                size = size,
-            ) { onStepClick(index) }
+          else -> {
+            when {
+              index < currentStep.toInt() -> StepState.DONE
+              index == currentStep.toInt() -> StepState.CURRENT
+              else -> StepState.TODO
+            }
+          }
         }
+
+      HorizontalDashedStep(
+        stepStyle = stepStyle,
+        stepState = stepState,
+        totalSteps = totalSteps,
+        size = size,
+      ) { onStepClick(index) }
     }
+  }
 }

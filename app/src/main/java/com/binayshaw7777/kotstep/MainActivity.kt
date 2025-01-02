@@ -21,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
@@ -80,14 +81,14 @@ import com.binayshaw7777.kotstep.utils.Utils
 import com.binayshaw7777.kotstep.utils.toast
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            KotStepTheme(darkTheme = false) {
-                MainPreview()
-            }
-        }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      KotStepTheme(darkTheme = false) {
+        MainPreview()
+      }
     }
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,724 +96,725 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainPreview() {
 
-    val context = LocalContext.current
+  val context = LocalContext.current
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+  Surface(
+    modifier = Modifier.fillMaxSize(),
+    color = MaterialTheme.colorScheme.background
+  ) {
+
+    var totalSteps by rememberSaveable { mutableIntStateOf(5) }
+    var currentStep by rememberSaveable { mutableFloatStateOf(-1f) }
+    var showCheckMark by remember { mutableStateOf(true) }
+    var showStepStroke by remember { mutableStateOf(true) }
+    var showDoneOnPartialCompletion by remember { mutableStateOf(true) }
+    var expanded by remember { mutableStateOf(false) }
+    var expandedShapeMenu by remember { mutableStateOf(false) }
+    var currentStepperType by remember { mutableStateOf(StepperOptions.HORIZONTAL_DASHED_STEPPER) }
+    var currentStepperItemShape by remember { mutableStateOf(StepperItemShape.CIRCLE_SHAPE) }
+    var stepItemSize by remember { mutableIntStateOf(35) }
+    var lineThickness by rememberSaveable { mutableIntStateOf(6) }
+    val icons = remember { mutableStateListOf<ImageVector>() }
+    val trailingLabels = remember { mutableStateListOf<(@Composable () -> Unit)?>() }
+    var lineSize by remember { mutableIntStateOf(20) }
+    var showLineStyleSheet by remember { mutableStateOf(false) }
+    var lineTopPadding by remember { mutableIntStateOf(0) }
+    var lineBottomPadding by remember { mutableIntStateOf(0) }
+    var lineStartPadding by remember { mutableIntStateOf(0) }
+    var lineEndPadding by remember { mutableIntStateOf(0) }
+    var stepStroke by remember { mutableFloatStateOf(2f) }
+    val strokeCapOptions = listOf("Rounded", "Butt", "Solid")
+    val strokeCapOptionsMapped = listOf(StrokeCap.Round, StrokeCap.Butt, StrokeCap.Square)
+    var trackStrokeCap by remember { mutableStateOf(strokeCapOptionsMapped[0]) }
+    val (selectedTrackStrokeCapOption, onOptionTrackSelected) = remember {
+      mutableStateOf(
+        strokeCapOptions[0]
+      )
+    }
+    var progressStrokeCap by remember { mutableStateOf(strokeCapOptionsMapped[0]) }
+    val (selectedProgressStrokeCapOption, onOptionProgressSelected) = remember {
+      mutableStateOf(
+        strokeCapOptions[0]
+      )
+    }
+
+    LaunchedEffect(totalSteps) {
+      icons.clear()
+      icons.addAll(Utils.getIcons(totalSteps))
+      trailingLabels.clear()
+      trailingLabels.addAll(Utils.getLabels(totalSteps))
+    }
+
+    LaunchedEffect(currentStep) {
+      println("Current Step: $currentStep")
+    }
+
+    val stepStyle = StepStyle(
+      lineStyle = LineDefault(
+        lineThickness = lineThickness.dp,
+        lineSize = lineSize.dp,
+        linePaddingStart = lineStartPadding.dp,
+        linePaddingEnd = lineEndPadding.dp,
+        linePaddingTop = lineTopPadding.dp,
+        linePaddingBottom = lineBottomPadding.dp,
+        trackStrokeCap = trackStrokeCap,
+        progressStrokeCap = progressStrokeCap,
+        todoLineTrackType = LineType.DOTTED,
+        currentLineTrackType = LineType.DASHED,
+        doneLineTrackType = LineType.SOLID,
+        todoLineProgressType = LineType.DOTTED,
+        currentLineProgressType = LineType.SOLID,
+        doneLineProgressType = LineType.SOLID
+      ),
+      showCheckMarkOnDone = showCheckMark,
+      showStrokeOnCurrent = showStepStroke,
+      ignoreCurrentState = showDoneOnPartialCompletion,
+      stepSize = stepItemSize.dp,
+      stepStroke = stepStroke,
+      stepShape = getShapeFromEnum(currentStepperItemShape),
+      colors = StepDefaults(
+        doneContainerColor = Color(0xFF00E676),
+        doneContentColor = Color(0xFF212121),
+        doneLineColor = Color(0xFF00E676),
+        currentContainerColor = Color(0xFF4B81F4),
+        currentLineColor = Color(0xFF4B81F4),
+        todoContainerColor = Color(0xFF50596C),
+        todoContentColor = Color.White,
+        todoLineColor = Color(0xFF50596C)
+      )
+    )
+
+    if (showLineStyleSheet) {
+      ModalBottomSheet(
+        onDismissRequest = { showLineStyleSheet = false },
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+      ) {
+        Column(
+          Modifier
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+        ) {
+          Text(
+            text = "Line Size in DP: $lineSize",
+            modifier = Modifier.padding(vertical = 4.dp)
+          )
+          Slider(
+            value = lineSize.toFloat(),
+            onValueChange = { newValue ->
+              lineSize = newValue.toInt()
+            },
+            valueRange = 20f..50f, // Set the range of Step Item size
+            steps = 30, // Divide the range into 20 steps
+            modifier = Modifier.fillMaxWidth()
+          )
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+          Text(
+            text = "Line Thickness in DP: $lineThickness",
+            modifier = Modifier.padding(vertical = 4.dp)
+          )
+          Slider(
+            value = lineThickness.toFloat(),
+            onValueChange = { newValue ->
+              lineThickness = newValue.toInt()
+            },
+            valueRange = 1f..10f, // Set the range of Line Thickness
+            steps = 10, // Divide the range into 7 steps
+            modifier = Modifier.fillMaxWidth()
+          )
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+
+          Text(
+            text = "Line Padding Top in DP: $lineTopPadding",
+            modifier = Modifier.padding(vertical = 4.dp)
+          )
+          Slider(
+            value = lineTopPadding.toFloat(),
+            onValueChange = { newValue ->
+              lineTopPadding = newValue.toInt()
+            },
+            valueRange = 0f..10f,
+            steps = 10,
+            modifier = Modifier.fillMaxWidth()
+          )
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+
+          Text(
+            text = "Line Padding Bottom in DP: $lineBottomPadding",
+            modifier = Modifier.padding(vertical = 4.dp)
+          )
+          Slider(
+            value = lineBottomPadding.toFloat(),
+            onValueChange = { newValue ->
+              lineBottomPadding = newValue.toInt()
+            },
+            valueRange = 0f..10f, // Set the range of Line Thickness
+            steps = 11, // Divide the range into 7 steps
+            modifier = Modifier.fillMaxWidth()
+          )
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+          Text(
+            text = "Line Padding Start in DP: $lineStartPadding",
+            modifier = Modifier.padding(vertical = 4.dp)
+          )
+          Slider(
+            value = lineStartPadding.toFloat(),
+            onValueChange = { newValue ->
+              lineStartPadding = newValue.toInt()
+            },
+            valueRange = 0f..10f,
+            steps = 11,
+            modifier = Modifier.fillMaxWidth()
+          )
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+
+          Text(
+            text = "Line Padding End in DP: $lineEndPadding",
+            modifier = Modifier.padding(vertical = 4.dp)
+          )
+          Slider(
+            value = lineEndPadding.toFloat(),
+            onValueChange = { newValue ->
+              lineEndPadding = newValue.toInt()
+            },
+            valueRange = 0f..10f, // Set the range of Line Thickness
+            steps = 11, // Divide the range into 7 steps
+            modifier = Modifier.fillMaxWidth()
+          )
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+          Text(
+            text = "Track Stroke Cap: $selectedTrackStrokeCapOption",
+            modifier = Modifier.padding(vertical = 4.dp)
+          )
+          Column {
+            strokeCapOptions.forEachIndexed { index, text ->
+              Row(
+                Modifier
+                  .fillMaxWidth()
+                  .selectable(
+                    selected = (text == selectedTrackStrokeCapOption),
+                    onClick = {
+                      onOptionTrackSelected(text)
+                      trackStrokeCap = strokeCapOptionsMapped[index]
+                    }
+                  ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+              ) {
+                RadioButton(
+                  selected = (text == selectedTrackStrokeCapOption),
+                  onClick = {
+                    onOptionTrackSelected(text)
+                    trackStrokeCap = strokeCapOptionsMapped[index]
+                  }
+                )
+                Text(
+                  text = text,
+                  style = MaterialTheme.typography.bodySmall,
+                  modifier = Modifier.padding(start = 8.dp)
+                )
+              }
+            }
+          }
+
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+          Text(
+            text = "Progress Stroke Cap: $selectedProgressStrokeCapOption",
+            modifier = Modifier.padding(vertical = 4.dp)
+          )
+          Column {
+            strokeCapOptions.forEachIndexed { index, text ->
+              Row(
+                Modifier
+                  .fillMaxWidth()
+                  .selectable(
+                    selected = (text == selectedProgressStrokeCapOption),
+                    onClick = {
+                      onOptionProgressSelected(text)
+                      progressStrokeCap = strokeCapOptionsMapped[index]
+                    }
+                  ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+              ) {
+                RadioButton(
+                  selected = (text == selectedProgressStrokeCapOption),
+                  onClick = {
+                    onOptionProgressSelected(text)
+                    progressStrokeCap = strokeCapOptionsMapped[index]
+                  }
+                )
+                Text(
+                  text = text,
+                  style = MaterialTheme.typography.bodySmall,
+                  modifier = Modifier.padding(start = 8.dp)
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    Column(
+      modifier = Modifier
+        .fillMaxHeight(0.7f)
+        .padding(16.dp)
+        .verticalScroll(rememberScrollState()),
+      verticalArrangement = Arrangement.SpaceBetween,
     ) {
 
-        var totalSteps by rememberSaveable { mutableIntStateOf(5) }
-        var currentStep by rememberSaveable { mutableFloatStateOf(-1f) }
-        var showCheckMark by remember { mutableStateOf(true) }
-        var showStepStroke by remember { mutableStateOf(true) }
-        var showDoneOnPartialCompletion by remember { mutableStateOf(true) }
-        var expanded by remember { mutableStateOf(false) }
-        var expandedShapeMenu by remember { mutableStateOf(false) }
-        var currentStepperType by remember { mutableStateOf(StepperOptions.HORIZONTAL_DASHED_STEPPER) }
-        var currentStepperItemShape by remember { mutableStateOf(StepperItemShape.CIRCLE_SHAPE) }
-        var stepItemSize by remember { mutableIntStateOf(35) }
-        var lineThickness by rememberSaveable { mutableIntStateOf(6) }
-        val icons = remember { mutableStateListOf<ImageVector>() }
-        val trailingLabels = remember { mutableStateListOf<(@Composable () -> Unit)?>() }
-        var lineSize by remember { mutableIntStateOf(20) }
-        var showLineStyleSheet by remember { mutableStateOf(false) }
-        var lineTopPadding by remember { mutableIntStateOf(0) }
-        var lineBottomPadding by remember { mutableIntStateOf(0) }
-        var lineStartPadding by remember { mutableIntStateOf(0) }
-        var lineEndPadding by remember { mutableIntStateOf(0) }
-        var stepStroke by remember { mutableFloatStateOf(2f) }
-        val strokeCapOptions = listOf("Rounded", "Butt", "Solid")
-        val strokeCapOptionsMapped = listOf(StrokeCap.Round, StrokeCap.Butt, StrokeCap.Square)
-        var trackStrokeCap by remember { mutableStateOf(strokeCapOptionsMapped[0]) }
-        val (selectedTrackStrokeCapOption, onOptionTrackSelected) = remember {
-            mutableStateOf(
-                strokeCapOptions[0]
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Box {
+          IconButton(onClick = { expanded = true }) {
+            Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
+          }
+          DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+          ) {
+            DropdownMenuItem(
+              text = { Text("Horizontal TAB Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.HORIZONTAL_TAB_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
             )
-        }
-        var progressStrokeCap by remember { mutableStateOf(strokeCapOptionsMapped[0]) }
-        val (selectedProgressStrokeCapOption, onOptionProgressSelected) = remember {
-            mutableStateOf(
-                strokeCapOptions[0]
+            DropdownMenuItem(
+              text = { Text("Horizontal NUMBERED Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.HORIZONTAL_NUMBERED_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
             )
+            DropdownMenuItem(
+              text = { Text("Horizontal ICON Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.HORIZONTAL_ICON_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
+            )
+            DropdownMenuItem(
+              text = { Text("Horizontal DASHED Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.HORIZONTAL_DASHED_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
+            )
+
+
+            DropdownMenuItem(
+              text = { Text("Vertical TAB Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.VERTICAL_TAB_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
+            )
+
+            DropdownMenuItem(
+              text = { Text("Vertical NUMBERED Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.VERTICAL_NUMBERED_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
+            )
+
+            DropdownMenuItem(
+              text = { Text("Vertical ICON Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.VERTICAL_ICON_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
+            )
+
+            DropdownMenuItem(
+              text = { Text("Vertical Tab LABEL Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.VERTICAL_TAB_LABEL_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
+            )
+            DropdownMenuItem(
+              text = { Text("Vertical Numbered LABEL Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.VERTICAL_NUMBERED_LABEL_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
+            )
+
+            DropdownMenuItem(
+              text = { Text("Vertical Icon LABEL Stepper") },
+              onClick = {
+                currentStepperType = StepperOptions.VERTICAL_ICON_LABEL_STEPPER
+                expanded = false
+              },
+              leadingIcon = {
+                Icon(
+                  Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                  contentDescription = null
+                )
+              }
+            )
+          }
         }
 
-        LaunchedEffect(totalSteps) {
-            icons.clear()
-            icons.addAll(Utils.getIcons(totalSteps))
-            trailingLabels.clear()
-            trailingLabels.addAll(Utils.getLabels(totalSteps))
-        }
-
-        LaunchedEffect(currentStep) {
-            println("Current Step: $currentStep")
-        }
-
-        val stepStyle = StepStyle(
-            lineStyle = LineDefault(
-                lineThickness = lineThickness.dp,
-                lineSize = lineSize.dp,
-                linePaddingStart = lineStartPadding.dp,
-                linePaddingEnd = lineEndPadding.dp,
-                linePaddingTop = lineTopPadding.dp,
-                linePaddingBottom = lineBottomPadding.dp,
-                trackStrokeCap = trackStrokeCap,
-                progressStrokeCap = progressStrokeCap,
-                todoLineTrackType = LineType.DOTTED,
-                currentLineTrackType = LineType.DASHED,
-                doneLineTrackType = LineType.SOLID,
-                todoLineProgressType = LineType.DOTTED,
-                currentLineProgressType = LineType.SOLID,
-                doneLineProgressType = LineType.SOLID
-            ),
-            showCheckMarkOnDone = showCheckMark,
-            showStrokeOnCurrent = showStepStroke,
-            ignoreCurrentState = showDoneOnPartialCompletion,
-            stepSize = stepItemSize.dp,
-            stepStroke = stepStroke,
-            stepShape = getShapeFromEnum(currentStepperItemShape),
-            colors = StepDefaults(
-                doneContainerColor = Color(0xFF00E676),
-                doneContentColor = Color(0xFF212121),
-                doneLineColor = Color(0xFF00E676),
-                currentContainerColor = Color(0xFF4B81F4),
-                currentLineColor = Color(0xFF4B81F4),
-                todoContainerColor = Color(0xFF50596C),
-                todoContentColor = Color.White,
-                todoLineColor = Color(0xFF50596C)
-            )
+        Text(
+          text = "Current Step: $currentStep",
+          style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
         )
 
-        if (showLineStyleSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { showLineStyleSheet = false },
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            ) {
-                Column(
-                    Modifier
-                        .padding(16.dp)
-                        .verticalScroll(rememberScrollState())) {
-                    Text(
-                        text = "Line Size in DP: $lineSize",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Slider(
-                        value = lineSize.toFloat(),
-                        onValueChange = { newValue ->
-                            lineSize = newValue.toInt()
-                        },
-                        valueRange = 20f..50f, // Set the range of Step Item size
-                        steps = 30, // Divide the range into 20 steps
-                        modifier = Modifier.fillMaxWidth()
-                    )
+        Box {
+          IconButton(onClick = { expandedShapeMenu = true }) {
+            Icon(Icons.Default.Menu, contentDescription = "Localized description")
+          }
+          DropdownMenu(
+            expanded = expandedShapeMenu,
+            onDismissRequest = { expandedShapeMenu = false }
+          ) {
+            DropdownMenuItem(
+              text = { Text("Circle Shape") },
+              onClick = {
+                currentStepperItemShape = StepperItemShape.CIRCLE_SHAPE
+                expandedShapeMenu = false
+              }
+            )
+            DropdownMenuItem(
+              text = { Text("Rectangle Shape") },
+              onClick = {
+                currentStepperItemShape = StepperItemShape.RECTANGLE_SHAPE
+                expandedShapeMenu = false
+              }
+            )
+            DropdownMenuItem(
+              text = { Text("CutCorner Shape") },
+              onClick = {
+                currentStepperItemShape = StepperItemShape.CUT_CORNER_SHAPE
+                expandedShapeMenu = false
+              }
+            )
+            DropdownMenuItem(
+              text = { Text("RoundedCorner Shape") },
+              onClick = {
+                currentStepperItemShape = StepperItemShape.ROUNDED_CORNER_SHAPE
+                expandedShapeMenu = false
+              }
+            )
+            DropdownMenuItem(
+              text = {
+                Text(if (showCheckMark) "Hide Check Mark" else "Show Check Mark")
+              },
+              onClick = {
+                showCheckMark = showCheckMark.not()
+                expandedShapeMenu = false
+              }
+            )
+            DropdownMenuItem(
+              text = {
+                Text(if (showStepStroke) "Hide Step Stroke" else "Show Step Stroke")
+              }, onClick = {
+                showStepStroke = showStepStroke.not()
+                expandedShapeMenu = false
+              }
+            )
+            DropdownMenuItem(
+              text = {
+                Text(if (showDoneOnPartialCompletion) "CURRENT -> Partially Completed" else "DONE -> Partially Completed")
+              }, onClick = {
+                showDoneOnPartialCompletion = showDoneOnPartialCompletion.not()
+                expandedShapeMenu = false
+              }
+            )
+          }
+        }
+      }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+      when (currentStepperType) {
+        StepperOptions.HORIZONTAL_TAB_STEPPER -> {
 
-                    Text(
-                        text = "Line Thickness in DP: $lineThickness",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Slider(
-                        value = lineThickness.toFloat(),
-                        onValueChange = { newValue ->
-                            lineThickness = newValue.toInt()
-                        },
-                        valueRange = 1f..10f, // Set the range of Line Thickness
-                        steps = 10, // Divide the range into 7 steps
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-
-                    Text(
-                        text = "Line Padding Top in DP: $lineTopPadding",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Slider(
-                        value = lineTopPadding.toFloat(),
-                        onValueChange = { newValue ->
-                            lineTopPadding = newValue.toInt()
-                        },
-                        valueRange = 0f..10f,
-                        steps = 10,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-
-                    Text(
-                        text = "Line Padding Bottom in DP: $lineBottomPadding",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Slider(
-                        value = lineBottomPadding.toFloat(),
-                        onValueChange = { newValue ->
-                            lineBottomPadding = newValue.toInt()
-                        },
-                        valueRange = 0f..10f, // Set the range of Line Thickness
-                        steps = 11, // Divide the range into 7 steps
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "Line Padding Start in DP: $lineStartPadding",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Slider(
-                        value = lineStartPadding.toFloat(),
-                        onValueChange = { newValue ->
-                            lineStartPadding = newValue.toInt()
-                        },
-                        valueRange = 0f..10f,
-                        steps = 11,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-
-                    Text(
-                        text = "Line Padding End in DP: $lineEndPadding",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Slider(
-                        value = lineEndPadding.toFloat(),
-                        onValueChange = { newValue ->
-                            lineEndPadding = newValue.toInt()
-                        },
-                        valueRange = 0f..10f, // Set the range of Line Thickness
-                        steps = 11, // Divide the range into 7 steps
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "Track Stroke Cap: $selectedTrackStrokeCapOption",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Column {
-                        strokeCapOptions.forEachIndexed { index, text ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .selectable(
-                                        selected = (text == selectedTrackStrokeCapOption),
-                                        onClick = {
-                                            onOptionTrackSelected(text)
-                                            trackStrokeCap = strokeCapOptionsMapped[index]
-                                        }
-                                    ),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start
-                            ) {
-                                RadioButton(
-                                    selected = (text == selectedTrackStrokeCapOption),
-                                    onClick = {
-                                        onOptionTrackSelected(text)
-                                        trackStrokeCap = strokeCapOptionsMapped[index]
-                                    }
-                                )
-                                Text(
-                                    text = text,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-                            }
-                        }
-                    }
-
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "Progress Stroke Cap: $selectedProgressStrokeCapOption",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Column {
-                        strokeCapOptions.forEachIndexed { index, text ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .selectable(
-                                        selected = (text == selectedProgressStrokeCapOption),
-                                        onClick = {
-                                            onOptionProgressSelected(text)
-                                            progressStrokeCap = strokeCapOptionsMapped[index]
-                                        }
-                                    ),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start
-                            ) {
-                                RadioButton(
-                                    selected = (text == selectedProgressStrokeCapOption),
-                                    onClick = {
-                                        onOptionProgressSelected(text)
-                                        progressStrokeCap = strokeCapOptionsMapped[index]
-                                    }
-                                )
-                                Text(
-                                    text = text,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+          HorizontalStepper(
+            style = tabHorizontal(
+              totalSteps = totalSteps,
+              currentStep = currentStep,
+              stepStyle = stepStyle
+            )
+          ) { it.toast(context) }
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.7f)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.SpaceBetween,
+        StepperOptions.HORIZONTAL_NUMBERED_STEPPER -> {
+          HorizontalStepper(
+            style = numberedHorizontal(
+              totalSteps = totalSteps,
+              currentStep = currentStep,
+              stepStyle = stepStyle
+            )
+          ) { it.toast(context) }
+        }
+
+        StepperOptions.HORIZONTAL_ICON_STEPPER -> {
+          HorizontalStepper(
+            style = iconHorizontal(
+              currentStep = currentStep,
+              icons = icons,
+              stepStyle = stepStyle
+            )
+          ) { it.toast(context) }
+        }
+
+        StepperOptions.HORIZONTAL_DASHED_STEPPER -> {
+          HorizontalStepper(
+            style = dashed(
+              totalSteps = totalSteps,
+              currentStep = currentStep,
+              stepStyle = stepStyle
+            )
+          ) { it.toast(context) }
+        }
+
+        StepperOptions.VERTICAL_ICON_STEPPER -> {
+          VerticalStepper(
+            style = iconVertical(
+              currentStep = currentStep,
+              icons = icons,
+              stepStyle = stepStyle,
+            )
+          ) { it.toast(context) }
+        }
+
+        StepperOptions.VERTICAL_TAB_STEPPER -> {
+
+          VerticalStepper(
+            style = tabVertical(
+              totalSteps = totalSteps,
+              currentStep = currentStep,
+              stepStyle = stepStyle
+            )
+          ) { it.toast(context) }
+        }
+
+        StepperOptions.VERTICAL_NUMBERED_STEPPER -> {
+          VerticalStepper(
+            style = numberedVertical(
+              totalSteps = totalSteps,
+              currentStep = currentStep,
+              stepStyle = stepStyle
+            )
+          ) { it.toast(context) }
+        }
+
+        StepperOptions.VERTICAL_NUMBERED_LABEL_STEPPER -> {
+          VerticalStepper(
+            style =
+            numberedVerticalWithLabel(
+              totalSteps = totalSteps,
+              currentStep = currentStep,
+              trailingLabels = trailingLabels,
+              stepStyle = stepStyle
+            )
+          ) { it.toast(context) }
+        }
+
+        StepperOptions.VERTICAL_ICON_LABEL_STEPPER -> {
+          VerticalStepper(
+            style =
+            iconVerticalWithLabel(
+              totalSteps = totalSteps,
+              currentStep = currentStep,
+              trailingLabels = trailingLabels,
+              icons = icons,
+              stepStyle = stepStyle
+            )
+          ) { it.toast(context) }
+        }
+
+        StepperOptions.VERTICAL_TAB_LABEL_STEPPER -> {
+          VerticalStepper(
+            style =
+            tabVerticalWithLabel(
+              totalSteps = totalSteps,
+              currentStep = currentStep,
+              stepStyle = stepStyle,
+              trailingLabels = trailingLabels
+            )
+          ) { it.toast(context) }
+        }
+      }
+
+      Column(
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier
+          .fillMaxWidth()
+          .navigationBarsPadding()
+          .padding(20.dp)
+      ) {
+        Text(
+          text = "Total Steps: : $totalSteps",
+          modifier = Modifier.padding(vertical = 2.dp)
+        )
+        Slider(
+          value = totalSteps.toFloat(),
+          onValueChange = { newValue ->
+            totalSteps = newValue.toInt()
+
+            // Because the current step should be less than the total steps
+            if (currentStep >= totalSteps) {
+              currentStep = newValue - 1f
+            }
+          },
+          valueRange = 1f..10f, // Set the range of Total Steps
+          steps = 10, // Divide the range into 10 steps
+          modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+          text = "Step Item Size in DP: $stepItemSize",
+          modifier = Modifier.padding(vertical = 4.dp)
+        )
+        Slider(
+          value = stepItemSize.toFloat(),
+          onValueChange = { newValue ->
+            stepItemSize = newValue.toInt()
+          },
+          valueRange = 32f..55f, // Set the range of Step Item size
+          steps = 30, // Divide the range into 20 steps
+          modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+          text = "Step Stroke: $stepStroke",
+          modifier = Modifier.padding(vertical = 4.dp)
+        )
+        Slider(
+          value = stepStroke,
+          onValueChange = { newValue ->
+            stepStroke = newValue
+          },
+          valueRange = 1f..10f, // Set the range of Step Item size
+          steps = 10, // Divide the range into 20 steps
+          modifier = Modifier.fillMaxWidth()
+        )
+
+        Button(onClick = { showLineStyleSheet = true }) {
+          Text("Modify Line Style")
+        }
+      }
+
+
+      Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+
+        AnimatedVisibility(
+          visible = currentStep >= -0.75f,
+          enter = fadeIn(),
+          exit = fadeOut()
         ) {
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Horizontal TAB Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.HORIZONTAL_TAB_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Horizontal NUMBERED Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.HORIZONTAL_NUMBERED_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Horizontal ICON Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.HORIZONTAL_ICON_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Horizontal DASHED Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.HORIZONTAL_DASHED_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-
-
-                        DropdownMenuItem(
-                            text = { Text("Vertical TAB Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.VERTICAL_TAB_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-
-                        DropdownMenuItem(
-                            text = { Text("Vertical NUMBERED Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.VERTICAL_NUMBERED_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-
-                        DropdownMenuItem(
-                            text = { Text("Vertical ICON Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.VERTICAL_ICON_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-
-                        DropdownMenuItem(
-                            text = { Text("Vertical Tab LABEL Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.VERTICAL_TAB_LABEL_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Vertical Numbered LABEL Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.VERTICAL_NUMBERED_LABEL_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-
-                        DropdownMenuItem(
-                            text = { Text("Vertical Icon LABEL Stepper") },
-                            onClick = {
-                                currentStepperType = StepperOptions.VERTICAL_ICON_LABEL_STEPPER
-                                expanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                    }
-                }
-
-                Text(
-                    text = "Current Step: $currentStep",
-                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
-                )
-
-                Box {
-                    IconButton(onClick = { expandedShapeMenu = true }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Localized description")
-                    }
-                    DropdownMenu(
-                        expanded = expandedShapeMenu,
-                        onDismissRequest = { expandedShapeMenu = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Circle Shape") },
-                            onClick = {
-                                currentStepperItemShape = StepperItemShape.CIRCLE_SHAPE
-                                expandedShapeMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Rectangle Shape") },
-                            onClick = {
-                                currentStepperItemShape = StepperItemShape.RECTANGLE_SHAPE
-                                expandedShapeMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("CutCorner Shape") },
-                            onClick = {
-                                currentStepperItemShape = StepperItemShape.CUT_CORNER_SHAPE
-                                expandedShapeMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("RoundedCorner Shape") },
-                            onClick = {
-                                currentStepperItemShape = StepperItemShape.ROUNDED_CORNER_SHAPE
-                                expandedShapeMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(if (showCheckMark) "Hide Check Mark" else "Show Check Mark")
-                            },
-                            onClick = {
-                                showCheckMark = showCheckMark.not()
-                                expandedShapeMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(if (showStepStroke) "Hide Step Stroke" else "Show Step Stroke")
-                            }, onClick = {
-                                showStepStroke = showStepStroke.not()
-                                expandedShapeMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(if (showDoneOnPartialCompletion) "CURRENT -> Partially Completed" else "DONE -> Partially Completed")
-                            }, onClick = {
-                                showDoneOnPartialCompletion = showDoneOnPartialCompletion.not()
-                                expandedShapeMenu = false
-                            }
-                        )
-                    }
-                }
+          Button(
+            onClick = {
+              currentStep -= 0.25f
             }
-
-            when (currentStepperType) {
-                StepperOptions.HORIZONTAL_TAB_STEPPER -> {
-
-                    HorizontalStepper(
-                        style = tabHorizontal(
-                            totalSteps = totalSteps,
-                            currentStep = currentStep,
-                            stepStyle = stepStyle
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.HORIZONTAL_NUMBERED_STEPPER -> {
-                    HorizontalStepper(
-                        style = numberedHorizontal(
-                            totalSteps = totalSteps,
-                            currentStep = currentStep,
-                            stepStyle = stepStyle
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.HORIZONTAL_ICON_STEPPER -> {
-                    HorizontalStepper(
-                        style = iconHorizontal(
-                            currentStep = currentStep,
-                            icons = icons,
-                            stepStyle = stepStyle
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.HORIZONTAL_DASHED_STEPPER -> {
-                    HorizontalStepper(
-                        style = dashed(
-                            totalSteps = totalSteps,
-                            currentStep = currentStep,
-                            stepStyle = stepStyle
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.VERTICAL_ICON_STEPPER -> {
-                    VerticalStepper(
-                        style = iconVertical(
-                            currentStep = currentStep,
-                            icons = icons,
-                            stepStyle = stepStyle,
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.VERTICAL_TAB_STEPPER -> {
-
-                    VerticalStepper(
-                        style = tabVertical(
-                            totalSteps = totalSteps,
-                            currentStep = currentStep,
-                            stepStyle = stepStyle
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.VERTICAL_NUMBERED_STEPPER -> {
-                    VerticalStepper(
-                        style = numberedVertical(
-                            totalSteps = totalSteps,
-                            currentStep = currentStep,
-                            stepStyle = stepStyle
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.VERTICAL_NUMBERED_LABEL_STEPPER -> {
-                    VerticalStepper(
-                        style =
-                        numberedVerticalWithLabel(
-                            totalSteps = totalSteps,
-                            currentStep = currentStep,
-                            trailingLabels = trailingLabels,
-                            stepStyle = stepStyle
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.VERTICAL_ICON_LABEL_STEPPER -> {
-                    VerticalStepper(
-                        style =
-                        iconVerticalWithLabel(
-                            totalSteps = totalSteps,
-                            currentStep = currentStep,
-                            trailingLabels = trailingLabels,
-                            icons = icons,
-                            stepStyle = stepStyle
-                        )
-                    ) { it.toast(context) }
-                }
-
-                StepperOptions.VERTICAL_TAB_LABEL_STEPPER -> {
-                    VerticalStepper(
-                        style =
-                        tabVerticalWithLabel(
-                            totalSteps = totalSteps,
-                            currentStep = currentStep,
-                            stepStyle = stepStyle,
-                            trailingLabels = trailingLabels
-                        )
-                    ) { it.toast(context) }
-                }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(20.dp)
-            ) {
-                Text(
-                    text = "Total Steps: : $totalSteps",
-                    modifier = Modifier.padding(vertical = 2.dp)
-                )
-                Slider(
-                    value = totalSteps.toFloat(),
-                    onValueChange = { newValue ->
-                        totalSteps = newValue.toInt()
-
-                        // Because the current step should be less than the total steps
-                        if (currentStep >= totalSteps) {
-                            currentStep = newValue - 1f
-                        }
-                    },
-                    valueRange = 1f..10f, // Set the range of Total Steps
-                    steps = 10, // Divide the range into 10 steps
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Step Item Size in DP: $stepItemSize",
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-                Slider(
-                    value = stepItemSize.toFloat(),
-                    onValueChange = { newValue ->
-                        stepItemSize = newValue.toInt()
-                    },
-                    valueRange = 32f..55f, // Set the range of Step Item size
-                    steps = 30, // Divide the range into 20 steps
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Step Stroke: $stepStroke",
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-                Slider(
-                    value = stepStroke,
-                    onValueChange = { newValue ->
-                        stepStroke = newValue
-                    },
-                    valueRange = 1f..10f, // Set the range of Step Item size
-                    steps = 10, // Divide the range into 20 steps
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Button(onClick = { showLineStyleSheet = true }) {
-                    Text("Modify Line Style")
-                }
-            }
-
-
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-
-                AnimatedVisibility(
-                    visible = currentStep >= -0.75f,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Button(
-                        onClick = {
-                            currentStep -= 0.25f
-                        }
-                    ) {
-                        Text(text = "Previous")
-                    }
-                }
-
-                Spacer(Modifier.weight(1f))
-
-                AnimatedVisibility(
-                    visible = currentStep < totalSteps.toFloat(),
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Button(
-                        onClick = {
-                            if (currentStep == -1f) {
-                                currentStep = 0f
-                            } else {
-                                currentStep += 0.25f
-                            }
-                        }
-                    ) {
-                        Text(
-                            text =
-                            if (currentStep == -1f) "Start"
-                            else if (currentStep >= totalSteps) "Finish"
-                            else "Next"
-                        )
-                    }
-                }
-            }
+          ) {
+            Text(text = "Previous")
+          }
         }
+
+        Spacer(Modifier.weight(1f))
+
+        AnimatedVisibility(
+          visible = currentStep < totalSteps.toFloat(),
+          enter = fadeIn(),
+          exit = fadeOut()
+        ) {
+          Button(
+            onClick = {
+              if (currentStep == -1f) {
+                currentStep = 0f
+              } else {
+                currentStep += 0.25f
+              }
+            }
+          ) {
+            Text(
+              text =
+              if (currentStep == -1f) "Start"
+              else if (currentStep >= totalSteps) "Finish"
+              else "Next"
+            )
+          }
+        }
+      }
     }
+  }
 }

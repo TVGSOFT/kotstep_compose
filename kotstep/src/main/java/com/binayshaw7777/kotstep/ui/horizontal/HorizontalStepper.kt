@@ -64,48 +64,48 @@ import com.binayshaw7777.kotstep.ui.horizontal.step.RenderHorizontalTab
  */
 @Composable
 fun HorizontalStepper(
-    modifier: Modifier = Modifier,
-    style: HorizontalStepperStyle,
-    onStepClick: (Int) -> Unit = {}
+  modifier: Modifier = Modifier,
+  style: HorizontalStepperStyle,
+  onStepClick: (Int) -> Unit = {}
 ) {
-    when (style) {
-        is HorizontalStepperStyle.Tab -> RenderHorizontalTab(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+  when (style) {
+    is HorizontalStepperStyle.Tab -> RenderHorizontalTab(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
-        is HorizontalStepperStyle.Icon -> RenderHorizontalIcon(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            icons = style.icons,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+    is HorizontalStepperStyle.Icon -> RenderHorizontalIcon(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      icons = style.icons,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
-        is HorizontalStepperStyle.Number -> RenderHorizontalNumber(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+    is HorizontalStepperStyle.Number -> RenderHorizontalNumber(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
-        is HorizontalStepperStyle.Dashed -> RenderHorizontalDashed(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+    is HorizontalStepperStyle.Dashed -> RenderHorizontalDashed(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
 //        is HorizontalStepperStyle.Fleet -> RenderHorizontalFleet(
 //            style.totalSteps,
 //            style.currentStep,
 //            style.fleetItemContent
 //        )
-    }
+  }
 }

@@ -19,49 +19,50 @@ import com.binayshaw7777.kotstep.model.StepStyle
  */
 @Composable
 internal fun RenderVerticalNumber(
-    modifier: Modifier = Modifier,
-    totalSteps: Int,
-    currentStep: Number,
-    stepStyle: StepStyle,
-    onStepClick: (Int) -> Unit = {}
+  modifier: Modifier = Modifier,
+  totalSteps: Int,
+  currentStep: Number,
+  stepStyle: StepStyle,
+  onStepClick: (Int) -> Unit = {}
 ) {
 
-    require(currentStep.toFloat() in -1f..totalSteps.toFloat()) { "Current step should be between -1.0 and total steps but it was ${currentStep.toFloat()}" }
+  require(currentStep.toFloat() in -1f..totalSteps.toFloat()) { "Current step should be between -1.0 and total steps but it was ${currentStep.toFloat()}" }
 
-    Column(
-        modifier = Modifier.then(modifier),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+  Column(
+    modifier = Modifier.then(modifier),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
 
-        for (index in 0 until totalSteps) {
-            val stepState = when {
-                stepStyle.ignoreCurrentState -> {
-                    if (currentStep.toFloat() >= index.toFloat()) StepState.DONE else StepState.TODO
-                }
-                else -> {
-                    when {
-                        index < currentStep.toInt() -> StepState.DONE
-                        index == currentStep.toInt() -> StepState.CURRENT
-                        else -> StepState.TODO
-                    }
-                }
-            }
-
-            val lineProgress = if (index == currentStep.toInt()) {
-                currentStep.toFloat() - currentStep.toInt()
-            } else if (index < currentStep.toInt()) {
-                1f
-            } else {
-                0f
-            }
-
-            VerticalNumberedStep(
-                stepStyle = stepStyle,
-                stepState = stepState,
-                stepNumber = index + 1,
-                isLastStep = index == totalSteps - 1,
-                lineProgress = lineProgress
-            ) { onStepClick(index) }
+    for (index in 0 until totalSteps) {
+      val stepState = when {
+        stepStyle.ignoreCurrentState -> {
+          if (currentStep.toFloat() >= index.toFloat()) StepState.DONE else StepState.TODO
         }
+
+        else -> {
+          when {
+            index < currentStep.toInt() -> StepState.DONE
+            index == currentStep.toInt() -> StepState.CURRENT
+            else -> StepState.TODO
+          }
+        }
+      }
+
+      val lineProgress = if (index == currentStep.toInt()) {
+        currentStep.toFloat() - currentStep.toInt()
+      } else if (index < currentStep.toInt()) {
+        1f
+      } else {
+        0f
+      }
+
+      VerticalNumberedStep(
+        stepStyle = stepStyle,
+        stepState = stepState,
+        stepNumber = index + 1,
+        isLastStep = index == totalSteps - 1,
+        lineProgress = lineProgress
+      ) { onStepClick(index) }
     }
+  }
 }

@@ -34,111 +34,111 @@ import com.binayshaw7777.kotstep.util.noRippleClickable
  */
 @Composable
 internal fun VerticalTabStep(
-    modifier: Modifier = Modifier,
-    stepStyle: StepStyle,
-    stepState: StepState,
-    isLastStep: Boolean,
-    lineProgress: Float,
-    onClick: () -> Unit
+  modifier: Modifier = Modifier,
+  stepStyle: StepStyle,
+  stepState: StepState,
+  isLastStep: Boolean,
+  lineProgress: Float,
+  onClick: () -> Unit
 ) {
 
-    val transition = updateTransition(targetState = stepState, label = "")
+  val transition = updateTransition(targetState = stepState, label = "")
 
-    val containerColor: Color by transition.animateColor(label = "itemColor") {
-        when (it) {
-            StepState.TODO -> stepStyle.colors.todoContainerColor
-            StepState.CURRENT -> stepStyle.colors.currentContainerColor
-            StepState.DONE -> stepStyle.colors.doneContainerColor
-        }
+  val containerColor: Color by transition.animateColor(label = "itemColor") {
+    when (it) {
+      StepState.TODO -> stepStyle.colors.todoContainerColor
+      StepState.CURRENT -> stepStyle.colors.currentContainerColor
+      StepState.DONE -> stepStyle.colors.doneContainerColor
     }
+  }
 
-    val lineColor: Color by transition.animateColor(label = "lineColor") {
-        when (it) {
-            StepState.TODO -> stepStyle.colors.todoLineColor
-            StepState.CURRENT -> stepStyle.colors.currentLineColor
-            StepState.DONE -> stepStyle.colors.doneLineColor
-        }
+  val lineColor: Color by transition.animateColor(label = "lineColor") {
+    when (it) {
+      StepState.TODO -> stepStyle.colors.todoLineColor
+      StepState.CURRENT -> stepStyle.colors.currentLineColor
+      StepState.DONE -> stepStyle.colors.doneLineColor
     }
+  }
 
-    val lineTrackStyle: LineType = when (stepState) {
-        StepState.TODO -> stepStyle.lineStyle.todoLineTrackType
-        StepState.CURRENT -> stepStyle.lineStyle.currentLineTrackType
-        StepState.DONE -> stepStyle.lineStyle.doneLineTrackType
-    }
+  val lineTrackStyle: LineType = when (stepState) {
+    StepState.TODO -> stepStyle.lineStyle.todoLineTrackType
+    StepState.CURRENT -> stepStyle.lineStyle.currentLineTrackType
+    StepState.DONE -> stepStyle.lineStyle.doneLineTrackType
+  }
 
-    val lineProgressStyle: LineType = when (stepState) {
-        StepState.TODO -> stepStyle.lineStyle.todoLineProgressType
-        StepState.CURRENT -> stepStyle.lineStyle.currentLineProgressType
-        StepState.DONE -> stepStyle.lineStyle.doneLineProgressType
-    }
+  val lineProgressStyle: LineType = when (stepState) {
+    StepState.TODO -> stepStyle.lineStyle.todoLineProgressType
+    StepState.CURRENT -> stepStyle.lineStyle.currentLineProgressType
+    StepState.DONE -> stepStyle.lineStyle.doneLineProgressType
+  }
 
-    val trackStrokeCap: StrokeCap = when (stepState) {
-        StepState.TODO -> StrokeCap.Round
-        StepState.CURRENT -> StrokeCap.Square
-        StepState.DONE -> stepStyle.lineStyle.trackStrokeCap
-    }
+  val trackStrokeCap: StrokeCap = when (stepState) {
+    StepState.TODO -> StrokeCap.Round
+    StepState.CURRENT -> StrokeCap.Square
+    StepState.DONE -> stepStyle.lineStyle.trackStrokeCap
+  }
 
-    val progressStrokeCap: StrokeCap = when (stepState) {
-        StepState.TODO -> StrokeCap.Round
-        StepState.CURRENT -> StrokeCap.Square
-        StepState.DONE -> stepStyle.lineStyle.progressStrokeCap
-    }
+  val progressStrokeCap: StrokeCap = when (stepState) {
+    StepState.TODO -> StrokeCap.Round
+    StepState.CURRENT -> StrokeCap.Square
+    StepState.DONE -> stepStyle.lineStyle.progressStrokeCap
+  }
 
-    Column(
-        modifier = Modifier
-            .noRippleClickable { onClick() }
-            .then(modifier),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+  Column(
+    modifier = Modifier
+      .noRippleClickable { onClick() }
+      .then(modifier),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center
+  ) {
+    Box(
+      contentAlignment = Alignment.Center,
+      modifier = Modifier.size(stepStyle.stepSize)
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.size(stepStyle.stepSize)
-        ) {
-            when (stepState) {
-                StepState.TODO -> {
-                    TodoTab(
-                        strokeColor = containerColor,
-                        strokeThickness = stepStyle.stepStroke,
-                        stepShape = stepStyle.stepShape
-                    )
-                }
-
-                StepState.CURRENT -> {
-                    CurrentTab(
-                        circleColor = containerColor,
-                        strokeThickness = stepStyle.stepStroke,
-                        stepShape = stepStyle.stepShape,
-                    )
-                }
-
-                StepState.DONE -> {
-                    DoneTab(
-                        circleColor = containerColor,
-                        showTick = stepStyle.showCheckMarkOnDone,
-                        checkMarkColor = stepStyle.colors.checkMarkColor,
-                        stepShape = stepStyle.stepShape
-                    )
-                }
-            }
+      when (stepState) {
+        StepState.TODO -> {
+          TodoTab(
+            strokeColor = containerColor,
+            strokeThickness = stepStyle.stepStroke,
+            stepShape = stepStyle.stepShape
+          )
         }
 
-        if (!isLastStep) {
-            KotStepVerticalDivider(
-                modifier = Modifier.padding(
-                    top = stepStyle.lineStyle.linePaddingTop,
-                    bottom = stepStyle.lineStyle.linePaddingBottom
-                ),
-                height = stepStyle.lineStyle.lineSize,
-                width = stepStyle.lineStyle.lineThickness,
-                lineTrackColor = stepStyle.colors.todoLineColor,
-                lineProgressColor = lineColor,
-                lineTrackStyle = lineTrackStyle,
-                lineProgressStyle = lineProgressStyle,
-                progress = lineProgress,
-                trackStrokeCap = trackStrokeCap,
-                progressStrokeCap = progressStrokeCap
-            )
+        StepState.CURRENT -> {
+          CurrentTab(
+            circleColor = containerColor,
+            strokeThickness = stepStyle.stepStroke,
+            stepShape = stepStyle.stepShape,
+          )
         }
+
+        StepState.DONE -> {
+          DoneTab(
+            circleColor = containerColor,
+            showTick = stepStyle.showCheckMarkOnDone,
+            checkMarkColor = stepStyle.colors.checkMarkColor,
+            stepShape = stepStyle.stepShape
+          )
+        }
+      }
     }
+
+    if (!isLastStep) {
+      KotStepVerticalDivider(
+        modifier = Modifier.padding(
+          top = stepStyle.lineStyle.linePaddingTop,
+          bottom = stepStyle.lineStyle.linePaddingBottom
+        ),
+        height = stepStyle.lineStyle.lineSize,
+        width = stepStyle.lineStyle.lineThickness,
+        lineTrackColor = stepStyle.colors.todoLineColor,
+        lineProgressColor = lineColor,
+        lineTrackStyle = lineTrackStyle,
+        lineProgressStyle = lineProgressStyle,
+        progress = lineProgress,
+        trackStrokeCap = trackStrokeCap,
+        progressStrokeCap = progressStrokeCap
+      )
+    }
+  }
 }

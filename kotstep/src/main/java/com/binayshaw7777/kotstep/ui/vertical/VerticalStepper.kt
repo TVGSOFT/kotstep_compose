@@ -68,63 +68,63 @@ import com.binayshaw7777.kotstep.ui.vertical.step.RenderVerticalTabWithLabel
  */
 @Composable
 fun VerticalStepper(
-    modifier: Modifier = Modifier,
-    style: VerticalStepperStyle,
-    onStepClick: (Int) -> Unit = {}
+  modifier: Modifier = Modifier,
+  style: VerticalStepperStyle,
+  onStepClick: (Int) -> Unit = {}
 ) {
-    when (style) {
+  when (style) {
 
-        is VerticalStepperStyle.Tab -> RenderVerticalTab(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+    is VerticalStepperStyle.Tab -> RenderVerticalTab(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
-        is VerticalStepperStyle.Icon -> RenderVerticalIcon(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            icons = style.icons,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+    is VerticalStepperStyle.Icon -> RenderVerticalIcon(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      icons = style.icons,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
-        is VerticalStepperStyle.Number -> RenderVerticalNumber(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+    is VerticalStepperStyle.Number -> RenderVerticalNumber(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
-        is VerticalStepperStyle.NumberWithLabel -> RenderVerticalNumberWithLabel(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            trailingLabels = style.trailingLabels,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+    is VerticalStepperStyle.NumberWithLabel -> RenderVerticalNumberWithLabel(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      trailingLabels = style.trailingLabels,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
-        is VerticalStepperStyle.IconWithLabel -> RenderVerticalIconWithLabel(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            icons = style.icons,
-            trailingLabels = style.trailingLabels,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
+    is VerticalStepperStyle.IconWithLabel -> RenderVerticalIconWithLabel(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      icons = style.icons,
+      trailingLabels = style.trailingLabels,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
 
-        is VerticalStepperStyle.TabWithLabel -> RenderVerticalTabWithLabel(
-            modifier = modifier,
-            totalSteps = style.totalSteps,
-            currentStep = style.currentStep,
-            trailingLabels = style.trailingLabels,
-            stepStyle = style.stepStyle,
-            onStepClick = { onStepClick(it) }
-        )
-    }
+    is VerticalStepperStyle.TabWithLabel -> RenderVerticalTabWithLabel(
+      modifier = modifier,
+      totalSteps = style.totalSteps,
+      currentStep = style.currentStep,
+      trailingLabels = style.trailingLabels,
+      stepStyle = style.stepStyle,
+      onStepClick = { onStepClick(it) }
+    )
+  }
 }

@@ -24,36 +24,40 @@ import androidx.compose.ui.unit.LayoutDirection
  */
 @Composable
 internal fun CurrentTab(
-    circleColor: Color = Color.Blue,
-    strokeThickness: Float = 4f,
-    stepShape: Shape = CircleShape
+  circleColor: Color = Color.Blue,
+  strokeThickness: Float = 4f,
+  stepShape: Shape = CircleShape
 ) {
 
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .clip(stepShape)
-    ) {
-        drawOutline(
-            outline = stepShape.createOutline(size, layoutDirection = LayoutDirection.Ltr, density = this),
-            color = circleColor,
-            style = Stroke(width = strokeThickness)
-        )
+  Canvas(
+    modifier = Modifier
+      .fillMaxSize()
+      .clip(stepShape)
+  ) {
+    drawOutline(
+      outline = stepShape.createOutline(
+        size,
+        layoutDirection = LayoutDirection.Ltr,
+        density = this
+      ),
+      color = circleColor,
+      style = Stroke(width = strokeThickness)
+    )
 
-        val innerSize = Size(size.width * 0.7f, size.height * 0.7f)
-        val offsetX = (size.width - innerSize.width) / 2f
-        val offsetY = (size.height - innerSize.height) / 2f
+    val innerSize = Size(size.width * 0.7f, size.height * 0.7f)
+    val offsetX = (size.width - innerSize.width) / 2f
+    val offsetY = (size.height - innerSize.height) / 2f
 
-        translate(left = offsetX, top = offsetY) {
-            drawOutline(
-                outline = stepShape.createOutline(
-                    size = innerSize,
-                    layoutDirection = LayoutDirection.Ltr,
-                    density = this
-                ),
-                color = circleColor,
-                style = Fill
-            )
-        }
+    translate(left = offsetX, top = offsetY) {
+      drawOutline(
+        outline = stepShape.createOutline(
+          size = innerSize,
+          layoutDirection = LayoutDirection.Ltr,
+          density = this
+        ),
+        color = circleColor,
+        style = Fill
+      )
     }
+  }
 }
